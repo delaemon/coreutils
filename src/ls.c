@@ -3895,7 +3895,7 @@ print_long_format (const struct fileinfo *f)
   if (print_inode)
     {
       char hbuf[INT_BUFSIZE_BOUND (uintmax_t)];
-      sprintf (p, "%*s ", inode_number_width,
+      sprintf (p, ":~| %*s ", inode_number_width,
                format_inode (hbuf, sizeof hbuf, f));
       /* Increment by strlen (p) here, rather than by inode_number_width + 1.
          The latter is wrong when inode_number_width is zero.  */
@@ -3922,7 +3922,7 @@ print_long_format (const struct fileinfo *f)
      "optional alternate access method flag".  */
   {
     char hbuf[INT_BUFSIZE_BOUND (uintmax_t)];
-    sprintf (p, "%s %*s ", modebuf, nlink_width,
+    sprintf (p, ":-p %s %*s ", modebuf, nlink_width,
              ! f->stat_ok ? "?" : umaxtostr (f->stat.st_nlink, hbuf));
   }
   /* Increment by strlen (p) here, rather than by, e.g.,
@@ -3959,7 +3959,7 @@ print_long_format (const struct fileinfo *f)
       int blanks_width = (file_size_width
                           - (major_device_number_width + 2
                              + minor_device_number_width));
-      sprintf (p, "%*s, %*s ",
+      sprintf (p, ":-b %*s, %*s ",
                major_device_number_width + MAX (0, blanks_width),
                umaxtostr (major (f->stat.st_rdev), majorbuf),
                minor_device_number_width,
@@ -4035,7 +4035,7 @@ print_long_format (const struct fileinfo *f)
       /* The time cannot be converted using the desired format, so
          print it as a huge integer number of seconds.  */
       char hbuf[INT_BUFSIZE_BOUND (intmax_t)];
-      sprintf (p, "%*s ", long_time_expected_width (),
+      sprintf (p, ":~) %*s ", long_time_expected_width (),
                (! f->stat_ok
                 ? "?"
                 : timetostr (when_timespec.tv_sec, hbuf)));
@@ -4289,17 +4289,17 @@ print_file_name_and_frills (const struct fileinfo *f, size_t start_col)
   set_normal_color ();
 
   if (print_inode)
-    printf ("%*s ", format == with_commas ? 0 : inode_number_width,
+    printf (":-) %*s", format == with_commas ? 0 : inode_number_width,
             format_inode (buf, sizeof buf, f));
 
   if (print_block_size)
-    printf ("%*s ", format == with_commas ? 0 : block_size_width,
+    printf (":-| %*s", format == with_commas ? 0 : block_size_width,
             ! f->stat_ok ? "?"
             : human_readable (ST_NBLOCKS (f->stat), buf, human_output_opts,
                               ST_NBLOCKSIZE, output_block_size));
 
   if (print_scontext)
-    printf ("%*s ", format == with_commas ? 0 : scontext_width, f->scontext);
+    printf (":-( %*s", format == with_commas ? 0 : scontext_width, f->scontext);
 
   size_t width = print_name_with_quoting (f, false, NULL, start_col);
 
